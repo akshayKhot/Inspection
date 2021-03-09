@@ -34,7 +34,7 @@
     "clean:examples:remotereconnection": "rimraf examples/remotereconnection/public/index.js examples/remotereconnection/public/helpers.js",
     "clean:examples:datatracks": "rimraf examples/datatracks/public/index.js examples/datatracks/public/helpers.js",
     "clean:quickstart": "rimraf quickstart/public/index.js",
-    "start": "npm run clean && npm run build && node server"
+    "start": "npm run clean:quickstart && npm run build:quickstart && node server"
   },
   "repository": {
     "type": "git",
