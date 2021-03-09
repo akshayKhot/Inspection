@@ -1,14 +1,14 @@
 'use strict';
 
-const { addUrlParams, getUrlParams } = require('./browser');
-const getUserFriendlyError = require('./userfriendlyerror');
+import { addUrlParams, getUrlParams } from './browser.js';
+import { getUserFriendlyError } from './userfriendlyerror.js';
 
 /**
  * Select your Room name and identity (screen name).
  * @param $modal - modal for selecting your Room name and identity
  * @param error - Error from the previous Room session, if any
  */
-function selectRoom($modal, error) {
+export function selectRoom($modal, error) {
   const $alert = $('div.alert', $modal);
   const $changeMedia = $('button.btn-dark', $modal);
   const $identity = $('#screen-name', $modal);
@@ -76,5 +76,3 @@ function selectRoom($modal, error) {
     });
   });
 }
-
-module.exports = selectRoom;

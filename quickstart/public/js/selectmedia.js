@@ -1,6 +1,6 @@
 'use strict';
 
-const { createLocalTracks } = require('twilio-video');
+import { createLocalTracks } from './twilio-video.js';
 
 const localTracks = {
   audio: null,
@@ -45,7 +45,7 @@ async function getInputDevices(kind) {
  * @param render - the media render function
  * @returns {Promise<string>} the device ID of the selected media input
  */
-async function selectMedia(kind, $modal, render) {
+export async function selectMedia(kind, $modal, render) {
   const $apply = $('button', $modal);
   const $inputDevices = $('select', $modal);
   const setDevice = () => applyInputDevice(kind, $inputDevices.val(), render);
@@ -108,5 +108,3 @@ async function selectMedia(kind, $modal, render) {
     });
   });
 }
-
-module.exports = selectMedia;

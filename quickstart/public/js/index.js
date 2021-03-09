@@ -1,13 +1,12 @@
 'use strict';
 
-const { isSupported } = require('twilio-video');
-
-const { isMobile } = require('./browser');
-const joinRoom = require('./joinroom');
-const micLevel = require('./miclevel');
-const selectMedia = require('./selectmedia');
-const selectRoom = require('./selectroom');
-const showError = require('./showerror');
+import { isSupported } from './twilio-video.js';
+import { isMobile } from './browser.js';
+import { joinRoom } from './joinroom.js';
+import { micLevel } from './miclevel.js';
+import { selectMedia } from './selectmedia.js';
+import { selectRoom } from './selectroom.js';
+import { showError } from './showerror.js';
 
 const $join = $('#join-room');
 const $modals = $('#modals');

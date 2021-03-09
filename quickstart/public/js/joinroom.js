@@ -1,7 +1,7 @@
 'use strict';
 
-const { connect, createLocalVideoTrack, Logger } = require('twilio-video');
-const { isMobile } = require('./browser');
+import { connect, createLocalVideoTrack } from './twilio-video.js';
+import { isMobile } from './browser.js';
 
 const $leave = $('#leave-room');
 const $room = $('#room');
@@ -217,11 +217,7 @@ function trackPublished(publication, participant) {
  * @param token - the AccessToken used to join a Room
  * @param connectOptions - the ConnectOptions used to join a Room
  */
-async function joinRoom(token, connectOptions) {
-  // Comment the next two lines to disable verbose logging.
-  const logger = Logger.getLogger('twilio-video');
-  logger.setLevel('debug');
-
+export async function joinRoom(token, connectOptions) {
   // Join to the Room with the given AccessToken and ConnectOptions.
   const room = await connect(token, connectOptions);
 
@@ -333,5 +329,3 @@ async function joinRoom(token, connectOptions) {
     });
   });
 }
-
-module.exports = joinRoom;
