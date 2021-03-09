@@ -1,6 +1,6 @@
 {
   "name": "inspection",
-  "version": "1.0.0-dev",
+  "version": "1.0.0",
   "description": "Twilio Video SDK Quick Start for JavaScript",
   "main": "index.js",
   "scripts": {
