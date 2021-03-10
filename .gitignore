@@ -74,3 +74,6 @@ examples/screenshare/public/helpers.js
 examples/localmediacontrols/public/helpers.js
 examples/remotereconnection/public/helpers.js
 examples/datatracks/public/helpers.js
+
+# .map files
+**/**/*.js.map
