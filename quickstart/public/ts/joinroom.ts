@@ -1,6 +1,6 @@
 'use strict';
 
-import { connect, createLocalVideoTrack } from './twilio-video.js';
+import { connect, createLocalVideoTrack, Room } from './twilio-video.js';
 import { isMobile } from './browser.js';
 
 const $leave = $('#leave-room');
@@ -27,7 +27,7 @@ function setActiveParticipant(participant) {
     $activeParticipant.removeClass('pinned');
 
     // Detach any existing VideoTrack of the active Participant.
-    const { track: activeTrack } = Array.from(activeParticipant.videoTracks.values())[0] || {};
+    const { track: activeTrack }: any = Array.from(activeParticipant.videoTracks.values())[0] || {};
     if (activeTrack) {
       activeTrack.detach($activeVideo.get(0));
       $activeVideo.css('opacity', '0');
@@ -45,7 +45,7 @@ function setActiveParticipant(participant) {
   }
 
   // Attach the new active Participant's video.
-  const { track } = Array.from(participant.videoTracks.values())[0] || {};
+  const { track }: any = Array.from(participant.videoTracks.values())[0] || {};
   if (track) {
     track.attach($activeVideo.get(0));
     $activeVideo.css('opacity', '');
@@ -219,13 +219,13 @@ function trackPublished(publication, participant) {
  */
 export async function joinRoom(token, connectOptions) {
   // Join to the Room with the given AccessToken and ConnectOptions.
-  const room = await connect(token, connectOptions);
+  const room: any = await connect(token, connectOptions);
 
   // Save the LocalVideoTrack.
-  let localVideoTrack = Array.from(room.localParticipant.videoTracks.values())[0].track;
+  let localVideoTrack = (Array.from(room.localParticipant.videoTracks.values())[0] as any).track;
 
   // Make the Room available in the JavaScript console for debugging.
-  window.room = room;
+  window['room'] = room;
 
   // Handle the LocalParticipant's media.
   participantConnected(room.localParticipant, room);
@@ -312,10 +312,11 @@ export async function joinRoom(token, connectOptions) {
       });
 
       // Clear the active Participant's video.
-      $activeVideo.get(0).srcObject = null;
+      const media = $activeVideo.get(0) as any;
+      media.srcObject = null;
 
       // Clear the Room reference used for debugging from the JavaScript console.
-      window.room = null;
+      window['room'] = null;
 
       if (error) {
         // Reject the Promise with the TwilioError so that the Room selection
@@ -324,7 +325,7 @@ export async function joinRoom(token, connectOptions) {
       } else {
         // Resolve the Promise so that the Room selection modal can be
         // displayed.
-        resolve();
+        resolve(null);
       }
     });
   });

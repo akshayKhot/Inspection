@@ -77,3 +77,6 @@ examples/datatracks/public/helpers.js
 
 # .map files
 **/**/*.js.map
+
+## generated JavaScript files
+quickstart/public/js/*.js

@@ -13,10 +13,10 @@ export function selectRoom($modal, error) {
   const $changeMedia = $('button.btn-dark', $modal);
   const $identity = $('#screen-name', $modal);
   const $join = $('button.btn-primary', $modal);
-  const $roomName = $('#room-name', $modal);
+  const $roomName = $('#room-name', $modal); 
 
   // If Room name is provided as a URL parameter, pre-populate the Room name field.
-  const { roomName } = getUrlParams();
+  const { roomName } = getUrlParams() as { roomName: string; };
   if (roomName) {
     $roomName.val(roomName);
   }
@@ -53,7 +53,7 @@ export function selectRoom($modal, error) {
           addUrlParams({ roomName });
 
           // Save the user name.
-          localStorage.setItem('userName', identity);
+          localStorage.setItem('userName', identity as string);
 
           $join.off('click', onJoin);
           $modal.modal('hide');

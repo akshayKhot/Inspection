@@ -1,6 +1,6 @@
 'use strict';
 
-import { isSupported } from './twilio-video.js';
+import { ConnectOptions, CreateLocalTrackOptions, isSupported } from './twilio-video.js';
 import { isMobile } from './browser.js';
 import { joinRoom } from './joinroom.js';
 import { micLevel } from './miclevel.js';
@@ -16,7 +16,7 @@ const $showErrorModal = $('#show-error', $modals);
 const $joinRoomModal = $('#join-room', $modals);
 
 // ConnectOptions settings for a video web application.
-const connectOptions = {
+const connectOptions: ConnectOptions = {
   // Available only in Small Group or Group Rooms only. Please set "Room Type"
   // to "Group" or "Small Group" in your Twilio Console:
   // https://www.twilio.com/console/video/configure
@@ -62,7 +62,7 @@ if (isMobile) {
 // the media device. So, we make sure users always test their media devices before
 // joining the Room. For more best practices, please refer to the following guide:
 // https://www.twilio.com/docs/video/build-js-video-application-recommendations-and-best-practices
-const deviceIds = {
+const deviceIds: { video: unknown; audio: unknown } = {
   audio: isMobile ? null : localStorage.getItem('audioDeviceId'),
   video: isMobile ? null : localStorage.getItem('videoDeviceId')
 };
@@ -80,7 +80,7 @@ async function selectAndJoinRoom(error = null) {
     deviceIds.video = null;
     return selectMicrophone();
   }
-  const { identity, roomName } = formData;
+  const { identity, roomName } = formData as any;
 
   try {
     // Fetch an AccessToken to join the Room.
@@ -90,13 +90,13 @@ async function selectAndJoinRoom(error = null) {
     const token = await response.text();
 
     // Add the specified audio device ID to ConnectOptions.
-    connectOptions.audio = { deviceId: { exact: deviceIds.audio } };
+    connectOptions.audio = { deviceId: { exact: deviceIds.audio } } as CreateLocalTrackOptions;
 
     // Add the specified Room name to ConnectOptions.
     connectOptions.name = roomName;
 
     // Add the specified video device ID to ConnectOptions.
-    connectOptions.video.deviceId = { exact: deviceIds.video };
+    (connectOptions.video as any).deviceId = { exact: deviceIds.video } as ConstrainDOMString;
 
     // Join the Room.
     await joinRoom(token, connectOptions);
@@ -151,6 +151,4 @@ if (!isSupported) {
   showError($showErrorModal, new Error('This browser is not supported.'));
 }
 
-$join.click(() => {
-  alert("Hello World");
-}));
+$join.click(selectMicrophone);

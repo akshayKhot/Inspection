@@ -7,7 +7,7 @@
 export function addUrlParams(params) {
   const combinedParams = Object.assign(getUrlParams(), params);
   const serializedParams = Object.entries(combinedParams)
-    .map(([name, value]) => `${name}=${encodeURIComponent(value)}`)
+    .map(([name, value]) => `${name}=${encodeURIComponent(value as string)}`)
     .join('&');
   history.pushState(null, '', `${location.pathname}?${serializedParams}`);
 }

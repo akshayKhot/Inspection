@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "./quickstart/public/js",
-    "target": "es6",
-    "lib": ["ES2017"],
-    "sourceMap": true
+    "target": "ES6",
+    "lib": ["ES2017", "DOM"],
+    "sourceMap": true,
+    "skipLibCheck": true
   },
   "include": ["./quickstart/public/ts/*"],
 }

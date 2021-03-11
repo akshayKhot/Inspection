@@ -64,9 +64,10 @@ export async function selectMedia(kind, $modal, render) {
   }
 
   // Populate the modal with the list of available media input devices.
-  $inputDevices.html(devices.map(({ deviceId, label }) => {
+  const htmlText: string = devices.map(({ deviceId, label }) => {
     return `<option value="${deviceId}">${label}</option>`;
-  }));
+  }).join('');
+  $inputDevices.html(htmlText);
 
   return new Promise(resolve => {
     $modal.on('shown.bs.modal', function onShow() {
@@ -95,7 +96,7 @@ export async function selectMedia(kind, $modal, render) {
 
       // Resolve the Promise with the saved device ID.
       const deviceId = $inputDevices.val();
-      localStorage.setItem(`${kind}DeviceId`, deviceId);
+      localStorage.setItem(`${kind}DeviceId`, deviceId as string);
       resolve(deviceId);
     });
 
