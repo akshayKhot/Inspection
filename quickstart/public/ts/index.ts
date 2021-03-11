@@ -179,7 +179,6 @@ export class Inspection {
   }
 }
 
-
 $('#join-room').on('click', () => {
   const inspection = new Inspection();
   inspection.startInspection();
