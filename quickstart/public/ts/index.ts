@@ -2,12 +2,12 @@
 
 import { isSupported } from './video.js';
 import { isMobile } from './browser.js';
-import { joinRoom } from './joinroom.js';
+import { RoomJoiner } from './joinroom.js';
 import { micLevel } from './miclevel.js';
 import { MediaSelector } from './selectmedia.js';
 import { RoomSelector } from './selectroom.js';
 import { showError } from './showerror.js';
-import { ConnectOptions, CreateLocalTrackOptions } from 'twilio-video';
+import { ConnectOptions, CreateLocalTrackOptions, Room } from 'twilio-video';
 
 const $join = $('#join-room');
 const $modals = $('#modals');
@@ -20,6 +20,7 @@ export class Inspection {
 
   mediaSelector: MediaSelector;
   roomSelector: RoomSelector;
+  roomJoiner: RoomJoiner;
 
   connectOptions: ConnectOptions;
   deviceIds: { video: unknown; audio: unknown };
@@ -27,6 +28,7 @@ export class Inspection {
   constructor() {
     this.mediaSelector = new MediaSelector();
     this.roomSelector = new RoomSelector();
+    this.roomJoiner = new RoomJoiner();
 
     // ConnectOptions settings for a video web application.
     this.connectOptions = {
@@ -113,7 +115,7 @@ export class Inspection {
       (this.connectOptions.video as any).deviceId = { exact: this.deviceIds.video } as ConstrainDOMString;
 
       // Join the Room.
-      await joinRoom(token, this.connectOptions);
+      await this.roomJoiner.joinRoom(token, this.connectOptions);
 
       // After the video session, display the room selection modal.
       return this.selectAndJoinRoom();
