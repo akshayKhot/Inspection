@@ -5,7 +5,7 @@ import { isMobile } from './browser.js';
 import { joinRoom } from './joinroom.js';
 import { micLevel } from './miclevel.js';
 import { MediaSelector } from './selectmedia.js';
-import { selectRoom } from './selectroom.js';
+import { RoomSelector } from './selectroom.js';
 import { showError } from './showerror.js';
 import { ConnectOptions, CreateLocalTrackOptions } from 'twilio-video';
 
@@ -19,11 +19,14 @@ const $joinRoomModal = $('#join-room', $modals);
 export class Inspection {
 
   mediaSelector: MediaSelector;
+  roomSelector: RoomSelector;
+
   connectOptions: ConnectOptions;
   deviceIds: { video: unknown; audio: unknown };
 
   constructor() {
     this.mediaSelector = new MediaSelector();
+    this.roomSelector = new RoomSelector();
 
     // ConnectOptions settings for a video web application.
     this.connectOptions = {
@@ -83,7 +86,7 @@ export class Inspection {
  * @param [error=null] - Error from the previous Room session, if any
  */
   async selectAndJoinRoom(error = null) {
-    const formData = await selectRoom($joinRoomModal, error);
+    const formData = await this.roomSelector.selectRoom($joinRoomModal, error);
     if (!formData) {
       // User wants to change the camera and microphone.
       // So, show them the microphone selection modal.
