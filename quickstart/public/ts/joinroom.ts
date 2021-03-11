@@ -4,15 +4,7 @@ import { connect, createLocalVideoTrack } from './video.js';
 import { Browser } from './browser.js';
 import { Participant } from 'twilio-video';
 
-// The current active Participant in the Room.
-let activeParticipant = null;
-
-// Whether the user has selected the active Participant by clicking on
-// one of the video thumbnails.
-let isActiveParticipantPinned = false;
-
 export class RoomJoiner {
-
   $leave: JQuery;
   $room: JQuery;
   $activeParticipant: JQuery;
@@ -26,9 +18,6 @@ export class RoomJoiner {
   // one of the video thumbnails.
   isActiveParticipantPinned: boolean;
 
-  /**
-   *
-   */
   constructor() {
     this.$leave = $('#leave-room');
     this.$room = $('#room');
@@ -42,13 +31,13 @@ export class RoomJoiner {
  * @param participant - the active Participant
  */
   setActiveParticipant(participant) {
-    if (activeParticipant) {
-      const $activeParticipant = $(`div#${activeParticipant.sid}`, this.$participants);
+    if (this.activeParticipant) {
+      const $activeParticipant = $(`div#${this.activeParticipant.sid}`, this.$participants);
       $activeParticipant.removeClass('active');
       $activeParticipant.removeClass('pinned');
 
       // Detach any existing VideoTrack of the active Participant.
-      const { track: activeTrack }: any = Array.from(activeParticipant.videoTracks.values())[0] || {};
+      const { track: activeTrack }: any = Array.from(this.activeParticipant.videoTracks.values())[0] || {};
       if (activeTrack) {
         activeTrack.detach(this.$activeVideo.get(0));
         this.$activeVideo.css('opacity', '0');
@@ -56,12 +45,12 @@ export class RoomJoiner {
     }
 
     // Set the new active Participant.
-    activeParticipant = participant;
+    this.activeParticipant = participant;
     const { identity, sid } = participant;
     const $participant = $(`div#${sid}`, this.$participants);
 
     $participant.addClass('active');
-    if (isActiveParticipantPinned) {
+    if (this.isActiveParticipantPinned) {
       $participant.addClass('pinned');
     }
 
@@ -101,18 +90,18 @@ export class RoomJoiner {
 
     // Toggle the pinning of the active Participant's video.
     $container.on('click', () => {
-      if (activeParticipant === participant && isActiveParticipantPinned) {
+      if (this.activeParticipant === participant && this.isActiveParticipantPinned) {
         // Unpin the RemoteParticipant and update the current active Participant.
         this.setVideoPriority(participant, null);
-        isActiveParticipantPinned = false;
+        this.isActiveParticipantPinned = false;
         this.setCurrentActiveParticipant(room);
       } else {
         // Pin the RemoteParticipant as the active Participant.
-        if (isActiveParticipantPinned) {
-          this.setVideoPriority(activeParticipant, null);
+        if (this.isActiveParticipantPinned) {
+          this.setVideoPriority(this.activeParticipant, null);
         }
         this.setVideoPriority(participant, 'high');
-        isActiveParticipantPinned = true;
+        this.isActiveParticipantPinned = true;
         this.setActiveParticipant(participant);
       }
     });
@@ -149,7 +138,7 @@ export class RoomJoiner {
 
     // If the attached Track is a VideoTrack that is published by the active
     // Participant, then attach it to the main video as well.
-    if (track.kind === 'video' && participant === activeParticipant) {
+    if (track.kind === 'video' && participant === this.activeParticipant) {
       track.attach(this.$activeVideo.get(0));
       this.$activeVideo.css('opacity', '');
     }
@@ -168,7 +157,7 @@ export class RoomJoiner {
 
     // If the detached Track is a VideoTrack that is published by the active
     // Participant, then detach it from the main video as well.
-    if (track.kind === 'video' && participant === activeParticipant) {
+    if (track.kind === 'video' && participant === this.activeParticipant) {
       track.detach(this.$activeVideo.get(0));
       this.$activeVideo.css('opacity', '0');
     }
@@ -202,8 +191,8 @@ export class RoomJoiner {
   participantDisconnected(participant, room) {
     // If the disconnected Participant was pinned as the active Participant, then
     // unpin it so that the active Participant can be updated.
-    if (activeParticipant === participant && isActiveParticipantPinned) {
-      isActiveParticipantPinned = false;
+    if (this.activeParticipant === participant && this.isActiveParticipantPinned) {
+      this.isActiveParticipantPinned = false;
       this.setCurrentActiveParticipant(room);
     }
 
@@ -272,7 +261,7 @@ export class RoomJoiner {
     // Update the active Participant when changed, only if the user has not
     // pinned any particular Participant as the active Participant.
     room.on('dominantSpeakerChanged', () => {
-      if (!isActiveParticipantPinned) {
+      if (!this.isActiveParticipantPinned) {
         this.setCurrentActiveParticipant(room);
       }
     });
