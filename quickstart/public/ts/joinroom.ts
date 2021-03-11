@@ -1,6 +1,6 @@
 'use strict';
 
-import { connect, createLocalVideoTrack, Room } from './twilio-video.js';
+import { connect, createLocalVideoTrack } from './video.js';
 import { isMobile } from './browser.js';
 
 const $leave = $('#leave-room');

@@ -1,6 +1,6 @@
 'use strict';
 
-import { createLocalTracks } from './twilio-video.js';
+import { createLocalTracks } from './video.js';
 
 const localTracks = {
   audio: null,

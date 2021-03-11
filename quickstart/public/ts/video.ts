@@ -1,3 +1,6 @@
+
+declare var Twilio: any;
+
 export const Video = Twilio.Video;
 
 export const LocalAudioTrack = Twilio.Video.LocalAudioTrack;

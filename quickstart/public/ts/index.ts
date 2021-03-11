@@ -1,12 +1,13 @@
 'use strict';
 
-import { ConnectOptions, CreateLocalTrackOptions, isSupported } from './twilio-video.js';
+import { isSupported } from './video.js';
 import { isMobile } from './browser.js';
 import { joinRoom } from './joinroom.js';
 import { micLevel } from './miclevel.js';
 import { selectMedia } from './selectmedia.js';
 import { selectRoom } from './selectroom.js';
 import { showError } from './showerror.js';
+import { ConnectOptions, CreateLocalTrackOptions } from 'twilio-video';
 
 const $join = $('#join-room');
 const $modals = $('#modals');
