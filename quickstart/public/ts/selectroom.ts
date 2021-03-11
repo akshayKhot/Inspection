@@ -1,6 +1,6 @@
 'use strict';
 
-import { addUrlParams, getUrlParams } from './browser.js';
+import { Browser } from './browser.js';
 import { getUserFriendlyError } from './userfriendlyerror.js';
 
 export class RoomSelector {
@@ -18,7 +18,7 @@ export class RoomSelector {
     const $roomName = $('#room-name', $modal);
 
     // If Room name is provided as a URL parameter, pre-populate the Room name field.
-    const { roomName } = getUrlParams() as { roomName: string; };
+    const { roomName } = Browser.getUrlParams() as { roomName: string; };
     if (roomName) {
       $roomName.val(roomName);
     }
@@ -52,7 +52,7 @@ export class RoomSelector {
           const roomName = $roomName.val();
           if (identity && roomName) {
             // Append the Room name to the web application URL.
-            addUrlParams({ roomName });
+            Browser.addUrlParams({ roomName });
 
             // Save the user name.
             localStorage.setItem('userName', identity as string);

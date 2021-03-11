@@ -1,7 +1,7 @@
 'use strict';
 
 import { isSupported } from './video.js';
-import { isMobile } from './browser.js';
+import { Browser } from './browser.js';
 import { RoomJoiner } from './joinroom.js';
 import { micLevel } from './miclevel.js';
 import { MediaSelector } from './selectmedia.js';
@@ -18,6 +18,7 @@ const $joinRoomModal = $('#join-room', $modals);
 
 export class Inspection {
 
+  browser: Browser;
   mediaSelector: MediaSelector;
   roomSelector: RoomSelector;
   roomJoiner: RoomJoiner;
@@ -26,6 +27,7 @@ export class Inspection {
   deviceIds: { video: unknown; audio: unknown };
 
   constructor() {
+    this.browser = new Browser();
     this.mediaSelector = new MediaSelector();
     this.roomSelector = new RoomSelector();
     this.roomJoiner = new RoomJoiner();
@@ -65,7 +67,7 @@ export class Inspection {
     };
 
     // For mobile browsers, limit the maximum incoming video bitrate to 2.5 Mbps.
-    if (isMobile) {
+    if (Browser.isMobile()) {
       this.connectOptions
         .bandwidthProfile
         .video
@@ -78,8 +80,8 @@ export class Inspection {
     // joining the Room. For more best practices, please refer to the following guide:
     // https://www.twilio.com/docs/video/build-js-video-application-recommendations-and-best-practices
     this.deviceIds = {
-      audio: isMobile ? null : localStorage.getItem('audioDeviceId'),
-      video: isMobile ? null : localStorage.getItem('videoDeviceId')
+      audio: Browser.isMobile() ? null : localStorage.getItem('audioDeviceId'),
+      video: Browser.isMobile() ? null : localStorage.getItem('videoDeviceId')
     };
   }
 

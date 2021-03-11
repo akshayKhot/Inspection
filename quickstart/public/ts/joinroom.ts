@@ -1,7 +1,7 @@
 'use strict';
 
 import { connect, createLocalVideoTrack } from './video.js';
-import { isMobile } from './browser.js';
+import { Browser } from './browser.js';
 import { Participant } from 'twilio-video';
 
 // The current active Participant in the Room.
@@ -288,7 +288,7 @@ export class RoomJoiner {
         room.disconnect();
       };
 
-      if (isMobile) {
+      if (Browser.isMobile()) {
         // TODO(mmalavalli): investigate why "pagehide" is not working in iOS Safari.
         // In iOS Safari, "beforeunload" is not fired, so use "pagehide" instead.
         window.onpagehide = () => {
@@ -315,7 +315,7 @@ export class RoomJoiner {
       room.once('disconnected', (room, error) => {
         // Clear the event handlers on document and window..
         window.onbeforeunload = null;
-        if (isMobile) {
+        if (Browser.isMobile()) {
           window.onpagehide = null;
           document.onvisibilitychange = null;
         }
