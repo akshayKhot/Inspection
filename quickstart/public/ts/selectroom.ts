@@ -4,7 +4,6 @@ import { Browser } from './browser.js';
 import { getUserFriendlyError } from './userfriendlyerror.js';
 
 export class RoomSelector {
-
   /**
    * Select your Room name and identity (screen name).
    * @param $modal - modal for selecting your Room name and identity

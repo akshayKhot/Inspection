@@ -3,7 +3,6 @@
 import { createLocalTracks } from './video.js';
 
 export class MediaSelector {
-
   localTracks: any;
   audioContext: AudioContext;
 
