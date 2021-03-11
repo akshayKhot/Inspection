@@ -9,14 +9,12 @@ import { RoomSelector } from './selectroom.js';
 import { showError } from './showerror.js';
 import { ConnectOptions, CreateLocalTrackOptions, Room } from 'twilio-video';
 
-const $join = $('#join-room');
-const $modals = $('#modals');
-const $selectMicModal = $('#select-mic', $modals);
-const $selectCameraModal = $('#select-camera', $modals);
-const $showErrorModal = $('#show-error', $modals);
-const $joinRoomModal = $('#join-room', $modals);
-
 export class Inspection {
+  $modals: JQuery;
+  $selectMicModal: JQuery;
+  $selectCameraModal: JQuery;
+  $showErrorModal: JQuery;
+  $joinRoomModal: JQuery;
 
   browser: Browser;
   mediaSelector: MediaSelector;
@@ -27,6 +25,13 @@ export class Inspection {
   deviceIds: { video: unknown; audio: unknown };
 
   constructor() {
+
+    this.$modals = $('#modals');
+    this.$selectMicModal = $('#select-mic', this.$modals);
+    this.$selectCameraModal = $('#select-camera', this.$modals);
+    this.$showErrorModal = $('#show-error', this.$modals);
+    this.$joinRoomModal = $('#join-room', this.$modals);
+
     this.browser = new Browser();
     this.mediaSelector = new MediaSelector();
     this.roomSelector = new RoomSelector();
@@ -85,12 +90,22 @@ export class Inspection {
     };
   }
 
+  startInspection() {
+    // If the current browser is not supported by twilio-video.js, show an error
+    // message. Otherwise, start the application.
+    if (!isSupported) {
+      showError(this.$showErrorModal, new Error('This browser is not supported.'));
+    }
+
+    this.selectMicrophone();
+  }
+
   /**
  * Select your Room name, your screen name and join.
  * @param [error=null] - Error from the previous Room session, if any
  */
   async selectAndJoinRoom(error = null) {
-    const formData = await this.roomSelector.selectRoom($joinRoomModal, error);
+    const formData = await this.roomSelector.selectRoom(this.$joinRoomModal, error);
     if (!formData) {
       // User wants to change the camera and microphone.
       // So, show them the microphone selection modal.
@@ -132,12 +147,12 @@ export class Inspection {
   async selectCamera() {
     if (this.deviceIds.video === null) {
       try {
-        this.deviceIds.video = await this.mediaSelector.selectMedia('video', $selectCameraModal, videoTrack => {
-          const $video = $('video', $selectCameraModal);
+        this.deviceIds.video = await this.mediaSelector.selectMedia('video', this.$selectCameraModal, videoTrack => {
+          const $video = $('video', this.$selectCameraModal);
           videoTrack.attach($video.get(0))
         });
       } catch (error) {
-        showError($showErrorModal, error);
+        showError(this.$showErrorModal, error);
         return;
       }
     }
@@ -150,13 +165,13 @@ export class Inspection {
   async selectMicrophone() {
     if (this.deviceIds.audio === null) {
       try {
-        this.deviceIds.audio = await this.mediaSelector.selectMedia('audio', $selectMicModal, audioTrack => {
-          const $levelIndicator = $('svg rect', $selectMicModal);
+        this.deviceIds.audio = await this.mediaSelector.selectMedia('audio', this.$selectMicModal, audioTrack => {
+          const $levelIndicator = $('svg rect', this.$selectMicModal);
           const maxLevel = Number($levelIndicator.attr('height'));
           micLevel(audioTrack, maxLevel, level => $levelIndicator.attr('y', maxLevel - level));
         });
       } catch (error) {
-        showError($showErrorModal, error);
+        showError(this.$showErrorModal, error);
         return;
       }
     }
@@ -165,13 +180,7 @@ export class Inspection {
 }
 
 
-// If the current browser is not supported by twilio-video.js, show an error
-// message. Otherwise, start the application.
-if (!isSupported) {
-  showError($showErrorModal, new Error('This browser is not supported.'));
-}
-
-$join.on('click', () => {
+$('#join-room').on('click', () => {
   const inspection = new Inspection();
-  inspection.selectMicrophone();
+  inspection.startInspection();
 });
